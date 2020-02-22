@@ -13,7 +13,7 @@ namespace Asteroid_Belt_Assault
         SpriteBatch spriteBatch;
 
         enum GameStates { TitleScreen, Playing, PlayerDead, GameOver };
-        GameStates gameState = GameStates.Playing;
+        GameStates gameState = GameStates.TitleScreen;
         Texture2D titleScreen;
         Texture2D spriteSheet;
 
@@ -27,6 +27,18 @@ namespace Asteroid_Belt_Assault
         ExplosionManager explosionManager;
 
         CollisionManager collisionManager;
+
+        SpriteFont comicSansFont;
+
+        private float playerDeathDelayTime = 5f;
+        private float playerDeathTimer = 0f;
+        private float titleScreenTimer = 0f;
+        private float titleScreenDelayTime = 1f;
+
+        private int playerStartingLives = 3;
+        private Vector2 playerStartLocation = new Vector2(390, 550);
+        private Vector2 scoreLocation = new Vector2(20, 10);
+        private Vector2 livesLocation = new Vector2(20, 40);
 
         public Game1()
         {
@@ -59,6 +71,8 @@ namespace Asteroid_Belt_Assault
             titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
             spriteSheet = Content.Load<Texture2D>(@"Textures\SpriteSheet");
 
+            comicSansFont = Content.Load<SpriteFont>(@"Fonts\ComicSans");
+
             starField = new StarField(this.Window.ClientBounds.Width, this.Window.ClientBounds.Height, 
                 200, new Vector2(0, 30f), spriteSheet, new Rectangle(0, 450, 2, 2));
 
@@ -75,6 +89,8 @@ namespace Asteroid_Belt_Assault
                 new Rectangle(0, 450, 2, 2));
 
             collisionManager = new CollisionManager(asteroidManager, playerManager, enemyManager, explosionManager);
+
+            SoundManager.Initialize(Content);
         }
 
         /// <summary>
@@ -99,6 +115,17 @@ namespace Asteroid_Belt_Assault
             switch (gameState)
             {
                 case GameStates.TitleScreen:
+                    titleScreenTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (titleScreenTimer >= titleScreenDelayTime)
+                    {
+                        if (Keyboard.GetState().IsKeyDown(Keys.Space) || (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed))
+                        {
+                            playerManager.LivesRemaining = playerStartingLives;
+                            playerManager.PlayerScore = 0;
+                            ResetGame();
+                            gameState = GameStates.Playing;
+                        }
+                    }
                     break;
                 case GameStates.Playing:
                     starField.Update(gameTime);
@@ -107,10 +134,49 @@ namespace Asteroid_Belt_Assault
                     enemyManager.Update(gameTime);
                     explosionManager.Update(gameTime);
                     collisionManager.CheckCollisions();
+
+                    if (playerManager.Destroyed)
+                    {
+                        playerDeathTimer = 0;
+                        enemyManager.Active = false;
+                        playerManager.LivesRemaining--;
+                        if (playerManager.LivesRemaining < 0)
+                        {
+                            gameState = GameStates.GameOver;
+                        }
+                        else
+                        {
+                            gameState = GameStates.PlayerDead;
+                        }
+                    }
                     break;
                 case GameStates.PlayerDead:
+                    playerDeathTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    starField.Update(gameTime);
+                    asteroidManager.Update(gameTime);
+                    enemyManager.Update(gameTime);
+                    playerManager.PlayerShotManager.Update(gameTime);
+                    explosionManager.Update(gameTime);
+
+                    if (playerDeathTimer >= playerDeathDelayTime)
+                    {
+                        ResetGame();
+                        gameState = GameStates.Playing;
+                    }
                     break;
                 case GameStates.GameOver:
+                    playerDeathTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    starField.Update(gameTime);
+                    asteroidManager.Update(gameTime);
+                    enemyManager.Update(gameTime);
+                    playerManager.PlayerShotManager.Update(gameTime);
+                    explosionManager.Update(gameTime);
+
+                    if (playerDeathTimer >= playerDeathDelayTime)
+                    {
+                        gameState = GameStates.TitleScreen;
+                    }
                     break;
             }
 
@@ -140,14 +206,37 @@ namespace Asteroid_Belt_Assault
                 playerManager.Draw(spriteBatch);
                 enemyManager.Draw(spriteBatch);
                 explosionManager.Draw(spriteBatch);
+
+                spriteBatch.DrawString(comicSansFont, "Score: " + playerManager.PlayerScore.ToString(), scoreLocation, Color.White);
+
+                if (playerManager.LivesRemaining >= 0)
+                {
+                    spriteBatch.DrawString(comicSansFont, "Ships Remaining: " + playerManager.LivesRemaining.ToString(), livesLocation, Color.White);
+                }
             }
             if ((gameState == GameStates.GameOver))
             {
-
+                spriteBatch.DrawString(comicSansFont, "G A M E O V E R !",
+                    new Vector2(this.Window.ClientBounds.Width / 2 - comicSansFont.MeasureString("G A M E O V E R !").X / 2,
+                    this.Window.ClientBounds.Height / 2 - comicSansFont.MeasureString("G A M E O V E R !").Y / 2), Color.White);
             }
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private void ResetGame()
+        {
+            playerManager.playerSprite.Location = playerStartLocation;
+            foreach (Sprite asteroid in asteroidManager.Asteroids)
+            {
+                asteroid.Location = new Vector2(-500, -500);
+            }
+            enemyManager.Enemies.Clear();
+            enemyManager.Active = true;
+            playerManager.PlayerShotManager.Shots.Clear();
+            enemyManager.EnemyShotManager.Shots.Clear();
+            playerManager.Destroyed = false;
         }
     }
 }

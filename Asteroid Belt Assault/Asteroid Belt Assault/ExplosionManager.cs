@@ -74,6 +74,7 @@ namespace Asteroid_Belt_Assault
                     Vector2.Zero, explosionMaxSpeed, durationCount, initialColor, finalColor));
 
             }
+            SoundManager.PlayExplosion();
         }
 
         public void Update(GameTime gameTime)
