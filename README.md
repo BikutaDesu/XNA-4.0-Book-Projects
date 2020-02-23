@@ -4,9 +4,9 @@ Projects in the [XNA 4.0 Game Development by Example: Beginner's Guide, by Kurt 
 
 **Table of Contents**
 
-[TOCM]
+[Introduction](#introduction)
 
-[TOC]
+[Asteroid Belt Assault](#asteroid-belt-assault)
 
 # Introduction
 
@@ -18,7 +18,8 @@ Projects in the [XNA 4.0 Game Development by Example: Beginner's Guide, by Kurt 
 
 > Asteroid Belt Assault is a space shooter game, the player must survive by killing enemies, dodging their bullets and asteroids.
 
-#### Link: http://https://bikuta-desu.itch.io/asteroid-belt-assault
+- Link: http://https://bikuta-desu.itch.io/asteroid-belt-assault
 
-![](https://fatecspgov-my.sharepoint.com/personal/victor_neves4_fatec_sp_gov_br/Documents/Minhas%20coisas/XNA/XNA%204.0%20Game%20Development%20by%20Example/Asteroid%20Belt%20Assault%20Build/Screenshot_1.png)
+![alt text](https://i.imgur.com/2c5bIwr.png "Game screenshot")
 
+---
