@@ -22,7 +22,7 @@ Projects in the [XNA 4.0 Game Development by Example: Beginner's Guide, by Kurt 
 
 > Asteroid Belt Assault is a space shooter game, the player must survive by killing enemies, dodging their bullets and asteroids.
 
-- Link: http://https://bikuta-desu.itch.io/asteroid-belt-assault
+- Link: https://bikuta-desu.itch.io/asteroid-belt-assault
 
 ![alt text](https://i.imgur.com/2c5bIwr.png "Game screenshot")
 
