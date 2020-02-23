@@ -15,7 +15,7 @@ Projects in the [XNA 4.0 Game Development by Example: Beginner's Guide, by Kurt 
 # Introduction
 
 - All the projects in this repository were made for knowledge purposes.
-- They are in the [XNA book.](https://www.packtpub.com/game-development/xna-40-game-development-example-beginners-guide "XNA 4.0 Game Development by Example: Beginner's Guide, by Kurt Jaegers) 
+- They are in the [XNA book](https://www.packtpub.com/game-development/xna-40-game-development-example-beginners-guide) 
 - And all were made with [Monogame framework](http://www.monogame.net)
 
 # Asteroid Belt Assault
