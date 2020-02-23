@@ -6,11 +6,11 @@ Projects in the [XNA 4.0 Game Development by Example: Beginner's Guide, by Kurt 
 
 ## Table of Contents
 
-[Introduction](#introduction)
+- [Introduction](#introduction)
 
-[Asteroid Belt Assault](#asteroid-belt-assault)
+- [Asteroid Belt Assault](#asteroid-belt-assault)
 
-------------
+---
 
 # Introduction
 
