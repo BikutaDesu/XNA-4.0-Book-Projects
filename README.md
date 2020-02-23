@@ -8,13 +8,13 @@ Projects in the [XNA 4.0 Game Development by Example: Beginner's Guide, by Kurt 
 
 [TOC]
 
-#Introduction
+# Introduction
 
 - All the projects in this repository were made for knowledge purposes.
 - They are in the [XNA book.](https://www.packtpub.com/game-development/xna-40-game-development-example-beginners-guide "XNA 4.0 Game Development by Example: Beginner's Guide, by Kurt Jaegers) 
 - And all were made with [Monogame framework](http://www.monogame.net)
 
-#Asteroid Belt Assault
+# Asteroid Belt Assault
 
 > Asteroid Belt Assault is a space shooter game, the player must survive by killing enemies, dodging their bullets and asteroids.
 
