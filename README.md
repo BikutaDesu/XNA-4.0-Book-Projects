@@ -2,11 +2,15 @@
 
 Projects in the [XNA 4.0 Game Development by Example: Beginner's Guide, by Kurt Jaegers](https://www.packtpub.com/game-development/xna-40-game-development-example-beginners-guide "XNA 4.0 Game Development by Example: Beginner's Guide, by Kurt Jaegers") book
 
+---
+
 **Table of Contents**
 
 [Introduction](#introduction)
 
 [Asteroid Belt Assault](#asteroid-belt-assault)
+
+---
 
 # Introduction
 
