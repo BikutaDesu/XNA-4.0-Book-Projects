@@ -135,7 +135,7 @@ namespace Robot_Rampage
 
         public void RotateTo(Vector2 direction)
         {
-            Rotation += (float)Math.Atan2(direction.Y, direction.X);
+            Rotation = (float)Math.Atan2(direction.Y, direction.X);
         }
         #endregion
 
@@ -146,11 +146,13 @@ namespace Robot_Rampage
             {
                 float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+                timeForCurrentFrame += elapsed;
+
                 if (Animate)
                 {
                     if (timeForCurrentFrame >= FrameTime)
                     {
-                        if ((AnimateWhenStopped) || velocity != Vector2.Zero)
+                        if ((AnimateWhenStopped) || (velocity != Vector2.Zero))
                         {
                             currentFrame = (currentFrame + 1) % (frames.Count);
                             timeForCurrentFrame = 0.0f;

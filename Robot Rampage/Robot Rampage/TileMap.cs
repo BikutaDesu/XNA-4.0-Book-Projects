@@ -164,6 +164,39 @@ namespace Robot_Rampage
         }
         #endregion
 
+        #region Map Generation
+        static public void GenerateRandomMap()
+        {
+            int wallChancePerSquare = 10;
+
+            int floorTile = random.Next(FloorTileStart, FloorTileEnd + 1);
+            int wallTile = random.Next(WallTileStart, WallTileEnd + 1);
+
+            for (int x = 0; x < MapWidth; x++)
+            {
+                for (int y = 0; y < MapHeight; y++)
+                {
+                    mapSquares[x, y] = floorTile;
+                    if ((x == 0) || (y == 0) || (x == MapWidth - 1) || (y == MapHeight - 1))
+                    {
+                        mapSquares[x, y] = wallTile;
+                        continue;
+                    }
+
+                    if  ((x == 1) || (y == 1) || (x == MapWidth - 2) || (y == MapHeight - 2))
+                    {
+                        continue;
+                    }
+
+                    if (random.Next(0, 100) <= wallChancePerSquare)
+                    {
+                        mapSquares[x, y] = wallTile;
+                    }
+                }
+            }
+        }
+        #endregion
+
         #region Drawing
         static public void Draw(SpriteBatch spriteBatch)
         {
