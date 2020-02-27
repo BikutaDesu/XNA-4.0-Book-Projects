@@ -62,6 +62,8 @@ namespace Robot_Rampage
             Camera.ViewPortWidth = 800;
             Camera.ViewPortHeight = 600;
 
+            TileMap.Initialize(spriteSheet);
+
             // Temporary Demo Code Begin
             tempSprite = new Sprite(
                 new Vector2(100, 100),
@@ -144,6 +146,7 @@ namespace Robot_Rampage
             GraphicsDevice.Clear(Color.White);
 
             spriteBatch.Begin();
+            TileMap.Draw(spriteBatch);
             tempSprite.Draw(spriteBatch);
             tempSprite2.Draw(spriteBatch);
             spriteBatch.End();
