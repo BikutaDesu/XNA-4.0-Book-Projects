@@ -19,6 +19,8 @@ namespace Robot_Rampage
         private static Vector2 baseAngle = Vector2.Zero;
         private static Vector2 turretAngle = Vector2.Zero;
         private static float playerSpeed = 90f;
+
+        private static Rectangle scrollArea = new Rectangle(150, 100, 500, 400);
         #endregion
 
         #region Initialization
@@ -153,6 +155,7 @@ namespace Robot_Rampage
             {
                 moveAngle.Normalize();
                 baseAngle = moveAngle;
+                moveAngle = checkTileObstacles(elapsed, moveAngle);
             }
 
             if (fireAngle != Vector2.Zero)
@@ -165,6 +168,123 @@ namespace Robot_Rampage
             TurretSprite.RotateTo(turretAngle);
 
             BaseSprite.Velocity = moveAngle * playerSpeed;
+            repositionCamera(gameTime, moveAngle);
+        }
+        #endregion
+
+        #region Movement Limitations
+        private static void clampToWorld()
+        {
+            float currentX = BaseSprite.WorldLocation.X;
+            float currentY = BaseSprite.WorldLocation.Y;
+
+            currentX = MathHelper.Clamp(currentX, 0, Camera.WorldRectangle.Right - BaseSprite.FrameWidth);
+            currentY = MathHelper.Clamp(currentY, 0, Camera.WorldRectangle.Bottom - BaseSprite.FrameHeight);
+
+            BaseSprite.WorldLocation = new Vector2(currentX, currentY);
+        }
+
+        private static void repositionCamera(GameTime gameTime, Vector2 moveAngle)
+        {
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float moveScale = playerSpeed * elapsed;
+
+            if ((BaseSprite.ScreenRectangle.X < scrollArea.X) && (moveAngle.X < 0))
+            {
+                Camera.Move(new Vector2(moveAngle.X, 0) * moveScale);
+            }
+
+            if ((BaseSprite.ScreenRectangle.Right > scrollArea.Right) && (moveAngle.X > 0))
+            {
+                Camera.Move(new Vector2(moveAngle.X, 0) * moveScale);
+            }
+
+            if ((BaseSprite.ScreenRectangle.Y < scrollArea.Y) && (moveAngle.Y < 0))
+            {
+                Camera.Move(new Vector2(0, moveAngle.Y) * moveScale);
+            }
+
+            if ((BaseSprite.ScreenRectangle.Bottom > scrollArea.Bottom) && (moveAngle.Y > 0))
+            {
+                Camera.Move(new Vector2(0, moveAngle.Y) * moveScale);
+            }
+        }
+
+        private static Vector2 checkTileObstacles(float elapsedTime, Vector2 moveAngle)
+        {
+            Vector2 newHorizontalLocation = BaseSprite.WorldLocation + (new Vector2(moveAngle.X, 0) * (playerSpeed * elapsedTime));
+            Vector2 newVerticalLocation = BaseSprite.WorldLocation + (new Vector2(0, moveAngle.Y) * (playerSpeed * elapsedTime));
+
+            Rectangle newHorizontalRect = new Rectangle((int)newHorizontalLocation.X, (int)BaseSprite.WorldLocation.Y, BaseSprite.FrameWidth, BaseSprite.FrameHeight);
+            Rectangle newVerticalRect = new Rectangle((int)BaseSprite.WorldLocation.X, (int)newVerticalLocation.Y, BaseSprite.FrameWidth, BaseSprite.FrameHeight);
+
+            int horizontalLeftPixel = 0;
+            int horizontalRightPixel = 0;
+
+            int verticalTopPixel = 0;
+            int verticalBottomPixel = 0;
+
+            if (moveAngle.X < 0)
+            {
+                horizontalLeftPixel = (int)newHorizontalRect.Left;
+                horizontalRightPixel = (int)BaseSprite.WorldRectangle.Left;
+            }
+
+            if (moveAngle.X > 0)
+            {
+                horizontalLeftPixel = (int)BaseSprite.WorldRectangle.Right; 
+                horizontalRightPixel = (int)newHorizontalRect.Right;
+            }
+
+            if (moveAngle.Y < 0)
+            {
+                verticalTopPixel = (int)newVerticalRect.Top;
+                verticalBottomPixel = (int)BaseSprite.WorldRectangle.Top;
+            }
+
+            if (moveAngle.Y > 0)
+            {
+                verticalTopPixel = (int)BaseSprite.WorldRectangle.Bottom;
+                verticalBottomPixel = (int)newVerticalRect.Bottom;
+            }
+
+            if (moveAngle.X != 0)
+            {
+                for (int x = horizontalLeftPixel; x < horizontalRightPixel; x++)
+                {
+                    for (int y = 0; y < BaseSprite.FrameHeight; y++)
+                    {
+                        if (TileMap.IsWallTileByPixel(new Vector2(x, newHorizontalLocation.Y + y)))
+                        {
+                            moveAngle.X = 0;
+                            break;
+                        }
+                    }
+                    if (moveAngle.X == 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            if (moveAngle.Y != 0)
+            {
+                for (int y = verticalTopPixel; y < verticalBottomPixel; y++)
+                {
+                    for (int x = 0; x < BaseSprite.FrameWidth; x++)
+                    {
+                        if (TileMap.IsWallTileByPixel(new Vector2(newVerticalLocation.X + x, y)))
+                        {
+                            moveAngle.Y = 0;
+                            break;
+                        }
+                    }
+                    if (moveAngle.Y == 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            return moveAngle;
         }
         #endregion
 
@@ -173,6 +293,7 @@ namespace Robot_Rampage
         {
             handleInput(gameTime);
             BaseSprite.Update(gameTime);
+            clampToWorld();
             TurretSprite.WorldLocation = BaseSprite.WorldLocation;
         }
 
