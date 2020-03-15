@@ -67,6 +67,7 @@ namespace Robot_Rampage
             EffectsManager.Initialize(spriteSheet,new Rectangle(0, 288, 2, 2),
                 new Rectangle(0, 256, 32, 32), 3);
 
+            WeaponManager.Texture = spriteSheet;
 
         }
 
@@ -91,6 +92,8 @@ namespace Robot_Rampage
 
             Player.Update(gameTime);
 
+            WeaponManager.Update(gameTime);
+
             EffectsManager.Update(gameTime);
 
             base.Update(gameTime);
@@ -107,6 +110,7 @@ namespace Robot_Rampage
             spriteBatch.Begin();
             TileMap.Draw(spriteBatch);
             Player.Draw(spriteBatch);
+            WeaponManager.Draw(spriteBatch);
             EffectsManager.Draw(spriteBatch);
             spriteBatch.End();
 

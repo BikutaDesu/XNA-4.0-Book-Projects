@@ -139,7 +139,7 @@ namespace Robot_Rampage
             return GetTileAtPixel((int)pixelLocation.X, (int)pixelLocation.Y);
         }
 
-        static public bool isWallTile (int tileX, int tileY)
+        static public bool IsWallTile (int tileX, int tileY)
         {
             int tileIndex = GetTileAtSquare(tileX, tileY);
 
@@ -153,12 +153,12 @@ namespace Robot_Rampage
 
         static public bool IsWallTile(Vector2 square)
         {
-            return isWallTile((int)square.X, (int)square.Y);
+            return IsWallTile((int)square.X, (int)square.Y);
         }
 
         static public bool IsWallTileByPixel(Vector2 pixelLocation)
         {
-            return isWallTile(
+            return IsWallTile(
                 GetSquareByPixelX((int)pixelLocation.X),
                 GetSquareByPixelY((int)pixelLocation.Y));
         }
