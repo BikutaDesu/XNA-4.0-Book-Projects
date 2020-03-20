@@ -66,6 +66,7 @@ namespace Robot_Rampage
                     {
                         terminal.Deactivate();
                         activeCount--;
+                        GameManager.Score += 100;
                     }
                 }
             }

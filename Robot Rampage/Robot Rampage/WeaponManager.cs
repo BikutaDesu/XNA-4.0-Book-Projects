@@ -170,6 +170,7 @@ namespace Robot_Rampage
                 else
                 {
                     CreateLargeExplosion(shot.WorldCenter);
+                    CheckRocketSplashDamage(shot.WorldCenter);
                 }
             }
         }
@@ -194,6 +195,55 @@ namespace Robot_Rampage
                 }
             }
         }
+
+        private static void CheckShotEnemyImpacts(Sprite shot)
+        {
+            if (shot.Expired)
+            {
+                return;
+            }
+            foreach (Enemy enemy in EnemyManager.Enemies)
+            {
+                if (!enemy.Destroyed)
+                {
+                    if (shot.IsCircleColliding(enemy.EnemyBase.WorldCenter, enemy.EnemyBase.CollisionRadius))
+                    {
+                        shot.Expired = true;
+                        enemy.Destroyed = true;
+                        GameManager.Score += 10;
+                        if (shot.Frame == 0)
+                        {
+                            EffectsManager.AddExplosion(enemy.EnemyBase.WorldCenter, enemy.EnemyBase.Velocity / 30);
+                        }
+                        else
+                        {
+                            if (shot.Frame == 1)
+                            {
+                                CreateLargeExplosion(shot.WorldCenter);
+                                CheckRocketSplashDamage(shot.WorldCenter);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void CheckRocketSplashDamage(Vector2 location)
+        {
+            int rocketSplashRadius = 40;
+            foreach (Enemy enemy in EnemyManager.Enemies)
+            {
+                if (!enemy.Destroyed)
+                {
+                    if (enemy.EnemyBase.IsCircleColliding( location, rocketSplashRadius))
+                    {
+                        enemy.Destroyed = true;
+                        GameManager.Score += 10;
+                        EffectsManager.AddExplosion(enemy.EnemyBase.WorldCenter, Vector2.Zero);
+                    }
+                }
+            }
+        }
         #endregion
 
         #region Update and Draw
@@ -207,6 +257,7 @@ namespace Robot_Rampage
             {
                 Shots[i].Update(gameTime);
                 CheckShotWallImpacts(Shots[i]);
+                CheckShotEnemyImpacts(Shots[i]);
                 if (Shots[i].Expired)
                 {
                     Shots.RemoveAt(i);
