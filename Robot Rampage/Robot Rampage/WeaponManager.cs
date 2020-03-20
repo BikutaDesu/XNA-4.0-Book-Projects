@@ -116,7 +116,7 @@ namespace Robot_Rampage
                 }
             }
 
-            if (!TileMap.IsWallTile(x, y))
+            if (!(PathFinder.FindPath(new Vector2(x, y), Player.PathingNodePosition) == null))
             {
                 Sprite newPowerUp = new Sprite(new Vector2(thisDestination.X, thisDestination.Y), Texture, new Rectangle(64, 128, 32, 32), Vector2.Zero);
                 newPowerUp.Animate = false;

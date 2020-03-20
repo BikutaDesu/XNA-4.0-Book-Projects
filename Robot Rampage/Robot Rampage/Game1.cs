@@ -37,8 +37,6 @@ namespace Robot_Rampage
             this.graphics.PreferredBackBufferWidth = 800;
             this.graphics.ApplyChanges();
 
-
-
             base.Initialize();
         }
 
@@ -63,12 +61,15 @@ namespace Robot_Rampage
             TileMap.GenerateRandomMap();
 
             Player.Initialize(spriteSheet, new Rectangle(0, 64, 32, 32), 6,
-                new Rectangle(0, 96, 32, 32), 1, new Vector2(300, 300));
+                new Rectangle(0, 96, 32, 32), 1, new Vector2(32, 32));
 
             EffectsManager.Initialize(spriteSheet,new Rectangle(0, 288, 2, 2),
                 new Rectangle(0, 256, 32, 32), 3);
 
             WeaponManager.Texture = spriteSheet;
+
+            GoalManager.Initialize(spriteSheet, new Rectangle(0, 7 * 32, 32, 32), new Rectangle(3 * 32, 7 * 32, 32, 32), 3, 1);
+            GoalManager.GenerateComputers(10);
 
         }
 
@@ -92,10 +93,9 @@ namespace Robot_Rampage
                 Exit();
 
             Player.Update(gameTime);
-
             WeaponManager.Update(gameTime);
-
             EffectsManager.Update(gameTime);
+            GoalManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -113,27 +113,9 @@ namespace Robot_Rampage
             Player.Draw(spriteBatch);
             WeaponManager.Draw(spriteBatch);
             EffectsManager.Draw(spriteBatch);
+            GoalManager.Draw(spriteBatch);
 
-            // Temporary Code Begin
-            Vector2 mouseLocation = new Vector2(
-            Mouse.GetState().X, Mouse.GetState().Y);
-            mouseLocation += Camera.Position;
-            List<Vector2> path = PathFinder.FindPath(
-            TileMap.GetSquareAtPixel(mouseLocation),
-            TileMap.GetSquareAtPixel(Player.BaseSprite.WorldCenter));
-            if (!(path == null))
-            {
-                foreach (Vector2 node in path)
-                {
-                    spriteBatch.Draw(
-                    spriteSheet,
-                    TileMap.SquareScreenRectangle((int)node.X,
-                    (int)node.Y),
-                    new Rectangle(0, 288, 32, 32),
-                    new Color(128, 0, 0, 80));
-                }
-            }
-            // Temporary Code End
+
 
             spriteBatch.End();
 

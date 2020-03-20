@@ -23,6 +23,13 @@ namespace Robot_Rampage
         private static Rectangle scrollArea = new Rectangle(150, 100, 500, 400);
         #endregion
 
+        #region Properties
+        public static Vector2 PathingNodePosition 
+        {
+            get { return TileMap.GetSquareAtPixel(BaseSprite.WorldCenter); }
+        }
+        #endregion
+
         #region Initialization
         public static void Initialize(Texture2D texture, Rectangle baseInitialFrame, 
             int baseFrameCount, Rectangle turretInitialFrame, int turretFrameCount,
